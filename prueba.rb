@@ -1,6 +1,6 @@
 require 'colorize'
 
-user0 = [2,3,3,4]
+user0 = [1,2,3,4]
 p user0
 puts "------------ \n"
 possible = [1,2,3,4,5,6]
@@ -18,7 +18,7 @@ try = []
 try_arr = []
 #ciclo.negative? ||
 
-until rigth_position > 3
+until  rigth_position > 3
 
   puts ciclo
   user = user0.dup
@@ -32,14 +32,26 @@ until rigth_position > 3
 
   actual_try.reverse! if rigth_position + wrong_position != 4
   if rigth_position + wrong_position == 4
-    if clue != 1 && clue != 2
+    if clue != 1 && clue != 2 && clue != 3 && clue != 4
       actual_try.shuffle! while try_arr.include? actual_try
       try_arr << actual_try.dup
       puts 'hello'
     end
+    if clue == 4
+      actual_try.shuffle! while try_arr.include? actual_try
+      actual_try.shuffle! until actual_try[0] == discovered_numbers[1] 
+      try_arr << actual_try.dup
+      puts 'hi'
+    end
+    if clue == 3
+      actual_try.shuffle! while try_arr.include? actual_try
+      actual_try.shuffle! while actual_try[0] == discovered_numbers[0] || actual_try[0] == discovered_numbers[1]
+      try_arr << actual_try.dup
+      puts 'que rollo'
+    end
     if clue == 2
       actual_try.shuffle! while try_arr.include? actual_try
-      actual_try.shuffle! while actual_try[0] != discovered_numbers[0] 
+      actual_try.shuffle! until actual_try[0] == discovered_numbers[0] 
       try_arr << actual_try.dup
       puts 'que rock'
     end
@@ -95,7 +107,7 @@ until rigth_position > 3
         end
       end
       if discovered_numbers.length == 2 && discovered_numbers[0] == discovered_numbers[1] && clue != 1 && clue != 2
-        clue = 1 
+        clue = 1
       end
     end
   end
@@ -115,9 +127,11 @@ until rigth_position > 3
       user[user.index actual_element] = 0
     end
   end
-  if discovered_numbers.length == 2 && wrong_position == 2 && clue != 1
-    clue = 2 
-  end
+  clue = 4 if discovered_numbers.length == 2 && wrong_position == 2 && rigth_position.zero? && clue != 1 && clue != 2 && clue != 3 && clue != 4
+  clue = 3 if discovered_numbers.length == 2 && wrong_position == 1 && rigth_position == 1 && clue != 1 && clue != 2 && clue != 3 && clue != 4
+  clue = 3 if discovered_numbers.length == 3 && wrong_position == 1 && rigth_position == 2 && clue != 1 && clue != 2 && clue != 3 && clue != 4
+  clue = 2 if discovered_numbers.length == 3 && wrong_position.zero? && rigth_position == 3 && clue != 1 && clue != 2 && clue != 3 && clue != 4
+  clue = 2 if discovered_numbers.length == 2 && wrong_position.zero? && rigth_position == 2 && clue != 1 && clue != 2 && clue != 3 && clue != 4
   ciclo += 1
   rigth_position.times { print '● '.colorize(color: :light_green) }
   wrong_position.times { print '○ '.colorize(color: :light_white) }
