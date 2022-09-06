@@ -1,10 +1,10 @@
 require 'colorize'
 
-user0 = [3,1,3,1]
+user0 = [2,3,3,4]
 p user0
 puts "------------ \n"
 possible = [1,2,3,4,5,6]
-ciclo = 8
+ciclo = 0
 i = -1
 rigth_position = 0
 wrong_position = 0
@@ -15,8 +15,10 @@ c = 0
 tried_numbers = []
 discovered_numbers = []
 try = []
+try_arr = []
+#ciclo.negative? ||
 
-until ciclo.negative? || rigth_position > 3
+until rigth_position > 3
 
   puts ciclo
   user = user0.dup
@@ -30,16 +32,43 @@ until ciclo.negative? || rigth_position > 3
 
   actual_try.reverse! if rigth_position + wrong_position != 4
   if rigth_position + wrong_position == 4
+    if clue != 1 && clue != 2
+      actual_try.shuffle! while try_arr.include? actual_try
+      try_arr << actual_try.dup
+      puts 'hello'
+    end
+    if clue == 2
+      actual_try.shuffle! while try_arr.include? actual_try
+      actual_try.shuffle! while actual_try[0] != discovered_numbers[0] 
+      try_arr << actual_try.dup
+      puts 'que rock'
+    end
     if clue == 1
       c += 1
+      puts 'hola'
+      try = actual_try.dup if c == 1
       if c == 1
-        try = actual_try.dup
-        actual_try[0], actual_try[3] = actual_try[3], actual_try[0] 
+        actual_try = try.dup
+        actual_try[0], actual_try[3] = actual_try[3], actual_try[0]
+        try_arr << actual_try.dup 
       end
       if c == 2
-        actual_try = try
+        actual_try = try.dup
         actual_try[1], actual_try[2] = actual_try[2], actual_try[1]
         actual_try[2], actual_try[3] = actual_try[3], actual_try[2]
+        try_arr << actual_try.dup
+      end
+      if c == 3
+        actual_try = try.dup
+        actual_try[1], actual_try[3] = actual_try[3], actual_try[1]
+        actual_try[2], actual_try[3] = actual_try[3], actual_try[2]
+        try_arr << actual_try.dup
+      end
+      if c == 4
+        actual_try = try.dup
+        actual_try[0], actual_try[3] = actual_try[3], actual_try[0]
+        actual_try[2], actual_try[3] = actual_try[3], actual_try[2]
+        try_arr << actual_try.dup
       end
     end
   end
@@ -65,7 +94,7 @@ until ciclo.negative? || rigth_position > 3
           user[idx] = 0
         end
       end
-      if discovered_numbers.length == 2 && discovered_numbers[0] == discovered_numbers[1] && clue != 1
+      if discovered_numbers.length == 2 && discovered_numbers[0] == discovered_numbers[1] && clue != 1 && clue != 2
         clue = 1 
       end
     end
@@ -86,7 +115,10 @@ until ciclo.negative? || rigth_position > 3
       user[user.index actual_element] = 0
     end
   end
-  ciclo -= 1
+  if discovered_numbers.length == 2 && wrong_position == 2 && clue != 1
+    clue = 2 
+  end
+  ciclo += 1
   rigth_position.times { print '● '.colorize(color: :light_green) }
   wrong_position.times { print '○ '.colorize(color: :light_white) }
   puts ''
